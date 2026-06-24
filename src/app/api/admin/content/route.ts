@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { getContent, putContent } from "@/lib/storage";
+import { isAuthenticated } from "@/lib/auth";
 import { Content } from "@/lib/types";
 
-export async function GET() {
+function unauthorized() {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
+
+export async function GET(request: NextRequest) {
+  if (!(await isAuthenticated(request))) return unauthorized();
   try {
     const content = await getContent();
     return NextResponse.json(content);
@@ -14,6 +20,7 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
+  if (!(await isAuthenticated(request))) return unauthorized();
   try {
     const body = (await request.json()) as Content;
 

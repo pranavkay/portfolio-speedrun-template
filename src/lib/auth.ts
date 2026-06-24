@@ -71,5 +71,18 @@ export async function verifySessionToken(token: string | undefined): Promise<boo
   return constantTimeEqual(signature, expectedSig);
 }
 
+// Read and verify the session cookie off an incoming request.
+// Structural cookie type so this stays runtime-agnostic (NextRequest satisfies it).
+export async function isAuthenticated(request: {
+  cookies: { get(name: string): { value: string } | undefined };
+}): Promise<boolean> {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  try {
+    return await verifySessionToken(token);
+  } catch {
+    return false;
+  }
+}
+
 export const SESSION_COOKIE_NAME = COOKIE_NAME;
 export const SESSION_TTL_SECONDS = SESSION_TTL_MS / 1000;

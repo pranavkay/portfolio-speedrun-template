@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPresignedUploadUrl } from "@/lib/storage";
+import { isAuthenticated } from "@/lib/auth";
 
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -15,6 +16,9 @@ const ALLOWED_TYPES = [
 const MAX_NAME_LENGTH = 50;
 
 export async function POST(request: NextRequest) {
+  if (!(await isAuthenticated(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
     const { filename, contentType } = await request.json();
 

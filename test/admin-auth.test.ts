@@ -12,7 +12,7 @@ beforeAll(() => {
   process.env.ADMIN_PASSWORD = "correct horse battery staple";
 });
 
-function req(url: string, init?: RequestInit & { token?: string }) {
+function req(url: string, init?: ConstructorParameters<typeof NextRequest>[1] & { token?: string }) {
   const headers = new Headers(init?.headers);
   if (init?.token) headers.set("cookie", `${SESSION_COOKIE_NAME}=${init.token}`);
   return new NextRequest(url, { ...init, headers });

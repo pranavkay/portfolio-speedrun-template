@@ -100,7 +100,7 @@ describe("theme system", () => {
     });
 
     it("falls back to cinema for unknown palette", () => {
-      const config = { theme: { palette: "nonexistent" } } as PortfolioConfig;
+      const config = { theme: { palette: "nonexistent" } } as unknown as PortfolioConfig;
       const colors = resolveColors(config);
       expect(colors).toEqual(palettes.cinema);
     });
@@ -117,7 +117,7 @@ describe("theme system", () => {
     });
 
     it("falls back to classic for unknown pairing", () => {
-      const config = { theme: { fonts: "nonexistent" } } as PortfolioConfig;
+      const config = { theme: { fonts: "nonexistent" } } as unknown as PortfolioConfig;
       const fonts = resolveFonts(config);
       expect(fonts).toEqual(fontPairings.classic);
     });
